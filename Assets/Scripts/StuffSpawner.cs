@@ -5,6 +5,7 @@ public class StuffSpawner : MonoBehaviour {
 	public FloatRange timeBetweenSpawns, scale, randomVelocity, angularVelocity;
 	public Stuff[] StuffPrefabs;
 	public float velocity;
+	public Material stuffMaterial;
 
 	float currentSpawnDelay;
 	float timeSinceLastSpawn;
@@ -22,6 +23,7 @@ public class StuffSpawner : MonoBehaviour {
 
 	// Acutal spawner
 	void SpawnStuff () {
+
 		// Select item within random range
 		Stuff prefab = StuffPrefabs [Random.Range (0, StuffPrefabs.Length)];
 
@@ -37,5 +39,7 @@ public class StuffSpawner : MonoBehaviour {
 			Random.onUnitSphere * randomVelocity.RandomInRange;
 		spawn.Body.angularVelocity =
 			Random.onUnitSphere * angularVelocity.RandomInRange; 
+
+		spawn.GetComponent<MeshRenderer> ().material = stuffMaterial;
 	}
 }
