@@ -2,18 +2,20 @@
 
 public class StuffSpawner : MonoBehaviour {
 
-	public float timeBetweenSpawns;
+	public FloatRange timeBetweenSpawns, scale, randomVelocity, angularVelocity;
 	public Stuff[] StuffPrefabs;
 	public float velocity;
 
+	float currentSpawnDelay;
 	float timeSinceLastSpawn;
 
 
 	// Timer for spawner
 	void FixedUpdate () {
 		timeSinceLastSpawn += Time.deltaTime;
-		if (timeSinceLastSpawn >= timeBetweenSpawns) {
-			timeSinceLastSpawn -= timeBetweenSpawns;
+		if (timeSinceLastSpawn >= currentSpawnDelay) {
+			timeSinceLastSpawn -= currentSpawnDelay;
+			currentSpawnDelay = timeBetweenSpawns.RandomInRange;
 			SpawnStuff ();
 		}
 	}
@@ -25,9 +27,15 @@ public class StuffSpawner : MonoBehaviour {
 
 		// Spawn it with the prefab.
 		Stuff spawn = Instantiate<Stuff> (prefab);
-		spawn.transform.localPosition = transform.position;
+
+		spawn.transform.localPosition 	= transform.position;
+		spawn.transform.localScale 		= Vector3.one * scale.RandomInRange;
+		spawn.transform.localRotation = Random.rotation;
 
 		// Launch the prefab
-		spawn.Body.velocity = transform.up * velocity;
+		spawn.Body.velocity = transform.up * velocity +
+			Random.onUnitSphere * randomVelocity.RandomInRange;
+		spawn.Body.angularVelocity =
+			Random.onUnitSphere * angularVelocity.RandomInRange; 
 	}
 }
